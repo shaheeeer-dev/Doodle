@@ -1,0 +1,43 @@
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+out/
+build/
+
+# Gradle
+.gradle/
+
+# Maven
+target/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+
+# Environment files
+.env
+
+# Java / Kotlin
+*.class
+*.jar
+*.war
+*.ear
+
+# Node
+node_modules/
+dist/
