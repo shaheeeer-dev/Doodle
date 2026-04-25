@@ -1,8 +1,9 @@
 package src.java.com.doodle;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class InvertedIndex {
+public class InvertedIndex implements Serializable {
     private Map<String, List<Integer>> index;
 
     public InvertedIndex() {
