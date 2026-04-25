@@ -1,7 +1,27 @@
 package src.java.com.doodle;
 
-public class SearchEngine {
-}
+import java.io.*;
+import java.util.*;
+
+public class SearchEngine implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    private InvertedIndex invertedIndex;
+    private Map<Integer, Document> documentStore;
+    private int nextId;
+
+    public SearchEngine() {
+        invertedIndex = new InvertedIndex();
+        documentStore = new HashMap<>();
+        nextId = 1;
+    }
+
+
+    public void addDocument(String content, String title) {
+        if (content == null || content.trim().isEmpty()) {
+            return;
+        }
 
         int id = nextId++;
         Document doc = new Document(id, content, title);
@@ -44,7 +64,7 @@ public class SearchEngine {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(path))) {
             return (SearchEngine) in.readObject();
         } catch (Exception e) {
-            return new SearchEngine(); // fresh start
+            return new SearchEngine();
         }
     }
 
