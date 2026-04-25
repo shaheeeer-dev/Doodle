@@ -1,6 +1,8 @@
 package src.java.com.doodle;
 
-public class Document {
+import java.io.Serializable;
+
+public class Document  implements Serializable {
     private int id;
     private String content;
     private String title;
