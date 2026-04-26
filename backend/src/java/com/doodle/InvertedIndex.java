@@ -3,14 +3,27 @@ package src.java.com.doodle;
 import java.io.Serializable;
 import java.util.*;
 
-public class InvertedIndex implements Serializable {
+public class InvertedIndex implements Serializable{
+    private static final long serialVersionUID = 1L;
     private Map<String, List<Integer>> index;
 
-    public InvertedIndex() {
+    public InvertedIndex(){
         this.index = new HashMap<>();
     }
 
-    public void addDocument(int docId, String content) {
+    private List<String> tokenize(String text){
+        List<String> tokens = new ArrayList<>();
+        String[] words = text.toLowerCase().split("[^a-zA-Z]+");
+
+        for (String word : words) {
+            if (!word.isEmpty()) {
+                tokens.add(word);
+            }
+        }
+        return tokens;
+    }
+
+    public void addDocument(int docId, String content){
         List<String> tokens = tokenize(content);
 
         for (String word : tokens) {
@@ -22,12 +35,16 @@ public class InvertedIndex implements Serializable {
         }
     }
 
-    public List<Integer> search(String query) {
-        String word = query.toLowerCase().trim();
-        return index.getOrDefault(word, new ArrayList<>());
+    public List<Integer> search(String query){
+        List<String> tokens = tokenize(query);
+        if (tokens.isEmpty()){
+            return new ArrayList<>();
+        }
+
+        return index.getOrDefault(tokens.get(0), new ArrayList<>());
     }
 
-    public Map<Integer, Integer> searchMultipleWords(String query) {
+    public Map<Integer, Integer> searchMultipleWords(String query){
         Map<Integer, Integer> result = new HashMap<>();
         List<String> words = tokenize(query);
 
@@ -42,27 +59,5 @@ public class InvertedIndex implements Serializable {
         }
 
         return result;
-    }
-
-    public int getWordCount() {
-        return index.size();
-    }
-
-    public List<Integer> getPostings(String word) {
-        return search(word);
-    }
-
-    private List<String> tokenize(String text) {
-        List<String> tokens = new ArrayList<>();
-
-        String[] words = text.toLowerCase().split("[^a-zA-Z]+");
-
-        for (String word : words) {
-            if (!word.isEmpty()) {
-                tokens.add(word);
-            }
-        }
-
-        return tokens;
     }
 }
