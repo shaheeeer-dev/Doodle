@@ -4,7 +4,6 @@ import java.io.*;
 import java.util.*;
 
 public class SearchEngine implements Serializable {
-    @Serial
     private static final long serialVersionUID = 1L;
 
     private InvertedIndex invertedIndex;
@@ -12,34 +11,30 @@ public class SearchEngine implements Serializable {
     private int nextId;
 
     public SearchEngine() {
-        invertedIndex = new InvertedIndex();
-        documentStore = new HashMap<>();
-        nextId = 1;
+        this.invertedIndex = new InvertedIndex();
+        this.documentStore = new HashMap<>();
+        this.nextId = 1;
     }
 
-
-    public void addDocument(String content, String title) {
+    public void addDocument(String content, String title){
         if (content == null || content.trim().isEmpty()) {
             return;
         }
-
         int id = nextId++;
-        Document doc = new Document(id, content, title);
+
+        title = (title == null) ? "" : title;
+        Document doc =  new Document(id,content, title);
 
         documentStore.put(id, doc);
-
-        String combinedText = content + " " + (title != null ? title : "");
-        invertedIndex.addDocument(id, combinedText);
+        invertedIndex.addDocument(id, content);
     }
 
-    //Search (ranked)
-    public List<Document> search(String query) {
+    public List<Document> search(String query){
         Map<Integer, Integer> scores = invertedIndex.searchMultipleWords(query);
 
         List<Map.Entry<Integer, Integer>> list = new ArrayList<>(scores.entrySet());
 
-        list.sort((a, b) -> b.getValue() - a.getValue());
-
+        list.sort((a, b) -> Integer.compare(b.getValue(), a.getValue()));
         List<Document> results = new ArrayList<>();
 
         for (Map.Entry<Integer, Integer> entry : list) {
@@ -52,27 +47,29 @@ public class SearchEngine implements Serializable {
         return results;
     }
 
-    public void save(String path) {
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(path))) {
+    public void save(String filename){
+        try {
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename));
             out.writeObject(this);
+            out.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static SearchEngine load(String path) {
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(path))) {
-            return (SearchEngine) in.readObject();
+    public static SearchEngine load(String filename) {
+        try {
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream(filename));
+            SearchEngine engine = (SearchEngine) in.readObject();
+            in.close();
+            return engine;
         } catch (Exception e) {
+            e.printStackTrace();
             return new SearchEngine();
         }
     }
 
-    public Document getDocument(int id) {
-        return documentStore.get(id);
-    }
-
-    public int getTotalDocuments() {
+    public int getTotalDocumentCount(){
         return documentStore.size();
     }
 }
