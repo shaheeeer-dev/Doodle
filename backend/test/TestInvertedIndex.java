@@ -17,6 +17,5 @@ public class TestInvertedIndex {
         System.out.println(index.searchMultipleWords("java python"));
 
         System.out.println("\nTotal unique words:");
-        System.out.println(index.getWordCount());
     }
 }
