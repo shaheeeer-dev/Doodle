@@ -1,14 +1,33 @@
 package src.java.com.doodle;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.Serializable;
 import java.util.*;
 
 public class InvertedIndex implements Serializable{
     private static final long serialVersionUID = 1L;
     private Map<String, List<Integer>> index;
+    private Set<String> stopWords;
 
     public InvertedIndex(){
         this.index = new HashMap<>();
+        this.stopWords = loadStopWords("backend/src/resources/stopwords.txt");
+    }
+
+    private Set<String> loadStopWords(String filePath) {
+        Set<String> words = new HashSet<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                words.add(line.trim().toLowerCase());
+            }
+        } catch (Exception e) {
+            System.out.println("Stopwords file not found, continuing without filtering.");
+        }
+
+        return words;
     }
 
     private List<String> tokenize(String text){
@@ -16,7 +35,7 @@ public class InvertedIndex implements Serializable{
         String[] words = text.toLowerCase().split("[^a-zA-Z]+");
 
         for (String word : words) {
-            if (!word.isEmpty()) {
+            if (!word.isEmpty() && !stopWords.contains(word)) {
                 tokens.add(word);
             }
         }
