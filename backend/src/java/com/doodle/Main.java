@@ -12,11 +12,18 @@ import java.util.List;
 
 public class Main {
     private static SearchEngine engine;
+    private static ConfigLoader config;
+    private static int port;
+    private static String dataFile;
 
     public static void main(String[] args) throws IOException {
-        engine = SearchEngine.load("data/data.ser");
+        config = new ConfigLoader("backend/src/resources/config.properties");
 
-        HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+        port = config.getInt("server.port", 8080);
+        dataFile = config.get("data.file");
+
+        engine = SearchEngine.load(dataFile);
+        HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
 
         server.createContext("/add", new AddDocumentHandler());
         server.createContext("/search", new SearchQueryHandler());
@@ -24,11 +31,10 @@ public class Main {
         server.setExecutor(null);
         server.start();
 
-        System.out.println("Server started on port 8080");
+        System.out.println("Server started on port " + port);
     }
 
     static class AddDocumentHandler implements HttpHandler {
-
         @Override
         public void handle(HttpExchange request) throws IOException {
 
@@ -37,58 +43,52 @@ public class Main {
                 return;
             }
 
-            String requestBody = new String(request.getRequestBody().readAllBytes());
+            String body = new String(request.getRequestBody().readAllBytes());
 
-            String documentContent = extractValue(requestBody, "content");
-            String documentTitle = extractValue(requestBody, "title");
+            String content = extractValue(body, "content");
+            String title = extractValue(body, "title");
 
-            engine.addDocument(documentContent, documentTitle);
-            engine.save("data/data.ser");
+            engine.addDocument(content, title);
+            engine.save(dataFile);
 
             sendJson(request, "{\"status\":\"document added\"}");
         }
     }
 
     static class SearchQueryHandler implements HttpHandler {
-
         @Override
         public void handle(HttpExchange request) throws IOException {
-
             if (!request.getRequestMethod().equalsIgnoreCase("GET")) {
                 sendJson(request, "{\"error\":\"only GET allowed\"}");
                 return;
             }
-
-            String queryString = request.getRequestURI().getQuery();
-
-            if (queryString == null || !queryString.startsWith("q=")) {
+            String query = request.getRequestURI().getQuery();
+            if (query == null || !query.startsWith("q=")) {
                 sendJson(request, "{\"error\":\"missing query\"}");
                 return;
             }
 
-            String searchText = queryString.substring(2);
+            String searchText = query.substring(2);
             searchText = URLDecoder.decode(searchText, StandardCharsets.UTF_8);
 
-            List<Document> matchedDocuments = engine.search(searchText);
+            List<Document> results = engine.search(searchText);
 
-            StringBuilder jsonResponse = new StringBuilder("[");
-            for (int i = 0; i < matchedDocuments.size(); i++) {
+            StringBuilder json = new StringBuilder("[");
+            for (int i = 0; i < results.size(); i++) {
 
-                Document doc = matchedDocuments.get(i);
+                Document doc = results.get(i);
 
-                jsonResponse.append("{")
+                json.append("{")
                         .append("\"id\":").append(doc.getId()).append(",")
                         .append("\"title\":\"").append(doc.getTitle()).append("\",")
                         .append("\"content\":\"").append(doc.getContent()).append("\"")
                         .append("}");
 
-                if (i < matchedDocuments.size() - 1) {
-                    jsonResponse.append(",");
-                }
+                if (i < results.size() - 1) json.append(",");
             }
-            jsonResponse.append("]");
+            json.append("]");
 
-            sendJson(request, jsonResponse.toString());
+            sendJson(request, json.toString());
         }
     }
 
@@ -98,23 +98,22 @@ public class Main {
 
         request.sendResponseHeaders(200, response.getBytes().length);
 
-        OutputStream output = request.getResponseBody();
-        output.write(response.getBytes());
-        output.close();
+        OutputStream os = request.getResponseBody();
+        os.write(response.getBytes());
+        os.close();
     }
 
     private static String extractValue(String body, String key) {
         String pattern = "\"" + key + "\":\"";
-        int startIndex = body.indexOf(pattern);
-
-        if (startIndex == -1) return "";
-
-        startIndex += pattern.length();
-
-        int endIndex = body.indexOf("\"", startIndex);
-
-        if (endIndex == -1) return "";
-
-        return body.substring(startIndex, endIndex);
+        int start = body.indexOf(pattern);
+        if (start == -1) {
+            return "";
+        }
+        start += pattern.length();
+        int end = body.indexOf("\"", start);
+        if (end == -1) {
+            return "";
+        }
+        return body.substring(start, end);
     }
 }
