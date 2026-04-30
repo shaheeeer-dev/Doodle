@@ -2,9 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Doodle-Search engine</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doodle - Search Engine</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="app">
+        
+        <div id="logo">
+            <h1>Doodle</h1>
+        </div>
 
+        <section class="search-section">
+            <input id="searchInput" type="text" placeholder="Search the future...">
+            <div class="actions">
+                <button id="searchBtn">Search</button>
+                <button id="clearBtn">Clear</button>
+            </div>
+        </section>
+
+        <section id="suggestions" class="suggestions">
+
+        </section>
+    </div>
+    <script src="app.js"></script>
 </body>
 </html>
