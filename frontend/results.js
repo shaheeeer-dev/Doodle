@@ -18,29 +18,33 @@ async function loadResults() {
     }
 
     data.forEach(doc => {
-    const div = document.createElement("div");
-    div.className = "result-item";
+        const div = document.createElement("div");
+        div.className = "result-item";
 
-    // make short preview (2 lines approx)
-    let preview = doc.content;
-    if (preview.length > 120) {
-        preview = preview.substring(0, 120) + "...";
-    }
+        let preview = doc.content;
+        if (preview.length > 120) {
+            preview = preview.substring(0, 120) + "...";
+        }
 
-    div.innerHTML = `
-        <h3 class="result-title" data-id="${doc.id}">
-            ${doc.title}
-        </h3>
-        <p class="result-snippet">${preview}</p>
-    `;
+        const titleElement = document.createElement("h3");
+        titleElement.className = "result-title";
+        titleElement.innerText = doc.title;
 
-    // click on title → open full document
-    div.querySelector(".result-title").addEventListener("click", () => {
-        window.location.href = "document.html?id=" + doc.id;
+        titleElement.addEventListener("click", () => {
+            window.location.href =
+                "view.html?title=" + encodeURIComponent(doc.title) +
+                "&content=" + encodeURIComponent(doc.content);
+        });
+
+        const snippet = document.createElement("p");
+        snippet.className = "result-snippet";
+        snippet.innerText = preview;
+
+        div.appendChild(titleElement);
+        div.appendChild(snippet);
+
+        resultsBox.appendChild(div);
     });
-
-    resultsBox.appendChild(div);
-});
 }
 
 loadResults();
