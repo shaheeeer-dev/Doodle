@@ -110,8 +110,8 @@ public class Main {
                 Document doc = results.get(i);
                 json.append("{")
                         .append("\"id\":").append(doc.getId()).append(",")
-                        .append("\"title\":\"").append(doc.getTitle()).append("\",")
-                        .append("\"content\":\"").append(doc.getContent()).append("\"")
+                        .append("\"title\":\"").append(escapeJson(doc.getTitle())).append("\",")
+                        .append("\"content\":\"").append(escapeJson(doc.getContent())).append("\"")
                         .append("}");
                 if (i < results.size() - 1) json.append(",");
             }
@@ -141,5 +141,14 @@ public class Main {
         int end = body.indexOf("\"", start);
         if (end == -1) return "";
         return body.substring(start, end);
+    }
+
+    private static String escapeJson(String text) {
+        if (text == null) return "";
+        return text
+                .replace("\\", "\\\\")
+                .replace("\"", "\\\"")
+                .replace("\n", " ")
+                .replace("\r", " ");
     }
 }
