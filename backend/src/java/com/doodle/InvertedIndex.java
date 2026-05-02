@@ -32,7 +32,7 @@ public class InvertedIndex implements Serializable{
 
     private List<String> tokenize(String text){
         List<String> tokens = new ArrayList<>();
-        String[] words = text.toLowerCase().split("[^a-zA-Z]+");
+        String[] words = text.toLowerCase().split("\\W+");
 
         for (String word : words) {
             if (!word.isEmpty() && !stopWords.contains(word)) {

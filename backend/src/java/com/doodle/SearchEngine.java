@@ -26,7 +26,7 @@ public class SearchEngine implements Serializable {
         Document doc =  new Document(id,content, title);
 
         documentStore.put(id, doc);
-        invertedIndex.addDocument(id, content);
+        invertedIndex.addDocument(id, title + " " + content);
     }
 
     public List<Document> search(String query){
