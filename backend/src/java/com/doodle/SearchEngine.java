@@ -59,12 +59,20 @@ public class SearchEngine implements Serializable {
 
     public static SearchEngine load(String filename) {
         try {
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream(filename));
+            File file = new File(filename);
+
+            if (!file.exists() || file.length() == 0) {
+                System.out.println("No data file found. Starting fresh engine.");
+                return new SearchEngine();
+            }
+
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
             SearchEngine engine = (SearchEngine) in.readObject();
             in.close();
             return engine;
+
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Failed to load data file. Starting fresh engine.");
             return new SearchEngine();
         }
     }
