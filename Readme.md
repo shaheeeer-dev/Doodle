@@ -119,3 +119,9 @@ Doodle/
 Muhammad Shaheer<br>
 Software Engineering Undergrad<br>
 Project focused on **DSA, backend systems** and **search engine fundamentals**
+
+### Visuals
+<img width="1440" height="814" alt="Screenshot 2026-05-08 at 11 17 38 PM" src="https://github.com/user-attachments/assets/979f5b9a-d475-4b9f-9e7f-36b3e329040c" />
+<img width="1440" height="814" alt="Screenshot 2026-05-08 at 11 17 49 PM" src="https://github.com/user-attachments/assets/f3f5f0bb-efd9-4890-8bc3-e2a7de39f547" />
+<img width="1440" height="814" alt="Screenshot 2026-05-08 at 11 21 10 PM" src="https://github.com/user-attachments/assets/35ebb192-454d-4e4d-ad6e-1f930d015a5c" />
+<img width="1440" height="814" alt="Screenshot 2026-05-08 at 11 21 20 PM" src="https://github.com/user-attachments/assets/bdd03c48-f915-4699-aa42-c62006329364" />
