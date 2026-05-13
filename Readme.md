@@ -4,7 +4,6 @@
 ![Java](https://img.shields.io/badge/Java-Backend-red)
 ![Frontend](https://img.shields.io/badge/Frontend-HTML%2FCSS%2FJS-blue)
 
----
 
 ## Overview
 
@@ -16,7 +15,10 @@ The system allows users to:
 - Search documents using keywords
 - Retrieve ranked results instantly
 
----
+
+## Architecture Overview
+<img width="1233" height="768" alt="Gemini_Generated_Image_285hef285hef285h" src="https://github.com/user-attachments/assets/c0b19fb3-55d2-49d3-965a-a9652347800c" />
+
 
 ## Features
 
@@ -28,7 +30,6 @@ The system allows users to:
 - Frontend deployed on Netlify
 - Backend deployed on Render
 
----
 
 ## Core Concepts Used
 
@@ -39,7 +40,6 @@ The system allows users to:
 - Sorting for ranking results
 - String tokenization using regex
 
----
 
 ## Project Structure
 ```
@@ -89,7 +89,6 @@ Doodle/
     - Results are ranked based on frequency
 5. Frontend displays results dynamically
 
----
 
 ## Deployment
 
@@ -102,7 +101,6 @@ Doodle/
 
 * Hosted on Netlify
 
----
 
 ## Future Improvements
 
@@ -112,7 +110,6 @@ Doodle/
 * Database integration (MongoDB or PostgreSQL)
 * Analytics dashboard
 
----
 
 ### Author
 
